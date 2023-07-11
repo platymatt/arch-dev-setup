@@ -1,0 +1,6 @@
+---
+
+configure_dotfiles: false
+configure_terminal: false
+
+dotfiles_repo: https://github.com/platymatt/dotfiles.git

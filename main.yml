@@ -1,0 +1,13 @@
+---
+- name: Configure host.
+  hosts: all
+
+  vars_files:
+    - default.config.yml
+
+  # roles:
+
+  tasks:
+    - import_tasks:
+      when: 
+      tags: ['tagname']
