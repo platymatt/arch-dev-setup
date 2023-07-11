@@ -1,0 +1,6 @@
+---
+#roles:
+
+collections:
+  - name: community.general # needed to stdout_callback = yaml
+  - name: kewlfft.aur # https://github.com/kewlfft/ansible-aur

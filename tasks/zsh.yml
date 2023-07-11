@@ -1,10 +1,66 @@
 ---
 - name: Install zsh and friends
-  community.general.pacman:
-    name: zsh
+  package:
+    name:
+     - zsh
+     - glibc
+     - cmake # powerlevel10k
+     - wget # powerlevel10k
+     - awesome-terminal-fonts # icon package
+     - powerline-fonts # patched fonts for powerline
     state: present
+  become: true
 
 - name: Change user shell to zsh
   user:
     name: "{{ user }}"
-    shell: /bin
+    shell: /usr/bin/zsh
+
+- name: Check for oh-my-zsh
+  stat:
+    path: "/home/{{ user }}/.oh-my-zsh"
+  register: ohmyzsh_installed
+
+- name: Install oh-my-zsh
+  shell: bash -c "$(curl -fsSL https://raw.github.com/robbyrussel/oh-my-zsh/master/tools/install.sh)"
+  args:
+    creates: install.sh
+    chdir: "/home/{{ user }}"
+  become_user: "{{ user }}"
+  when: not ohmyzsh_installed.stat.exists
+
+- name: Check for powerlevel10k
+  stat:
+    path: "/home/{{ user }}/.oh-my-zsh/custom/themes/powerlevel10k"
+  register: powerlevel10k_installed
+
+- name: Install powerlevel10k with yay
+  kewlfft.aur.aur:
+    use: yay
+    name:
+      - zsh-theme-powerlevel10k-git
+  become_user: "{{ user }}"
+  when: not powerlevel10k_installed.stat.exists
+
+- name: Add the source of powerlevel10k
+  lineinfile:
+    path: "/home/{{ user }}/.zshrc"
+    line: "source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme"
+
+- name: Change zsh theme to powerlevel10k
+  lineinfile:
+    path: "/home/{{ user }}/.zshrc"
+    regexp: '^ZSH_THEME='
+    line: ZSH_THEME=powerlevel10k/powerlevel10k
+
+- name: Install meslo-nerd font for powerlevel10k
+  ansible.builtin.package:
+    name: ttf-meslo-nerd
+    state: present
+  become: true
+
+- name: Change xterm to use meslo-nerd font
+  lineinfile:
+    path: "/home/{{ user }}/.Xresources"
+    line: "xterm*faceName: MesloLGS NF"
+    create: true

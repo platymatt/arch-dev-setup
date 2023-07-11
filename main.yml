@@ -8,6 +8,6 @@
   # roles:
 
   tasks:
-    - import_tasks:
-      when: 
-      tags: ['tagname']
+    - name: Setup Zsh
+      import_tasks: tasks/zsh.yml
+      tags: ['zsh']
