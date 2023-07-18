@@ -64,3 +64,9 @@
     path: "/home/{{ user }}/.Xresources"
     line: "xterm*faceName: MesloLGS NF"
     create: true
+
+- name: Install zsh-autosuggestions
+  ansible.builtin.git:
+    repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
+    dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
+    become_user: "{{ user }}"
