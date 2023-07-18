@@ -15,6 +15,7 @@
   user:
     name: "{{ user }}"
     shell: /usr/bin/zsh
+  become: true
 
 - name: Check for oh-my-zsh
   stat:
@@ -69,4 +70,4 @@
   ansible.builtin.git:
     repo: 'https://github.com/zsh-users/zsh-autosuggestions.git'
     dest: "~/.oh-my-zsh/plugins/zsh-autosuggestions"
-    become_user: "{{ user }}"
+  become_user: "{{ user }}"
