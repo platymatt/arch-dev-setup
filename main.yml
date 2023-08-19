@@ -11,3 +11,7 @@
     - name: Setup Zsh
       import_tasks: tasks/zsh.yml
       tags: ['zsh']
+
+    - name: Setup Neovim
+      import_tasks: tasks/nvim-setup.yml
+      tags: ['neovim']
