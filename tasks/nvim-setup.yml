@@ -1,0 +1,7 @@
+---
+- name: Install neovim from pacman repo
+  package:
+    name:
+      - neovim
+    state: present
+  become: true
