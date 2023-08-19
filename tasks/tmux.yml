@@ -5,3 +5,33 @@
       - tmux
     state: present
   become: true
+
+- name: Configure oh-my-tmux
+  ansible.builtin.git:
+    repo: 'https://github.com/gpakosz/.tmux.git'
+    dest: "{{ lookup('ansible.builtin.env', 'HOME') }}/.tmux"
+  become_user: "{{ user }}"
+
+- name: Make ~/.config/tmux directory
+  ansible.builtin.file:
+    path: "{{ lookup('ansible.builtin.env', 'HOME') }}/.config/tmux"
+    state: directory
+  become_user: "{{ user }}"
+
+- name: Link oh-my-tmux tmux.conf to ~/.config/tmux/tmux.conf
+  ansible.builtin.file:
+    src: "{{ lookup('ansible.builtin.env', 'HOME') }}/.tmux/.tmux.conf"
+    dest: "{{ lookup('ansible.builtin.env', 'HOME') }}/.config/tmux/tmux.conf"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    state: link
+  become_user: "{{ user }}"
+
+- name: Copy tmux.conf.local example for initial setup without dotfiles
+  ansible.builtin.copy:
+    src: "{{ lookup('ansible.builtin.env', 'HOME') }}/.tmux/.tmux.conf.local"
+    dest: "{{ lookup('ansible.builtin.env', 'HOME') }}/.config/tmux/tmux.conf.local"
+    owner: "{{ user }}"
+    group: "{{ user }}"
+  become_user: "{{ user }}"
+  when: configure_dotfiles is false
