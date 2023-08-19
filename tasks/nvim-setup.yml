@@ -5,3 +5,11 @@
       - neovim
     state: present
   become: true
+
+- name: install dependencies for neovim setup
+  package:
+    name:
+      - ripgrep
+      - fd
+    state: present
+  become: true
